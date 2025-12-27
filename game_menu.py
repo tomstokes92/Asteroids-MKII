@@ -2,22 +2,16 @@ import pygame
 import sys
 import constants
 import random
+import settings_manager
 
 from audio import apply_volume
 
-def show_menu(screen, clock):
+def show_menu(screen, clock, settings):
     pygame.display.set_caption("Space Goose Menu")
 
     menu_options = ["Start Game", "Settings", "Quit"]
     selected_option = 0
     menu_active = True
-
-    # Settings dict
-    settings = {
-        "volume": 50,
-        "resolution": (constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT)
-    }
-
     move_sound = pygame.mixer.Sound("./sounds/menu_move.wav")
     select_sound = pygame.mixer.Sound("./sounds/menu_select.wav")
     apply_volume(settings, (move_sound, select_sound))
@@ -170,11 +164,13 @@ def show_settings_menu(screen, clock, settings, menu_font, move_sound, select_so
                     if menu_options[selected_option] == "Volume":
                         settings["volume"] = min(100, settings["volume"] + 5)
                         apply_volume(settings, (move_sound, select_sound))
+                        settings_manager.save_settings(settings)
                         move_sound.play()
                 elif event.key in [pygame.K_LEFT, pygame.K_a]:
                     if menu_options[selected_option] == "Volume":
                         settings["volume"] = max(0, settings["volume"] - 5)
                         apply_volume(settings, (move_sound, select_sound))
+                        settings_manager.save_settings(settings)
                         move_sound.play()
                 elif event.key == pygame.K_RETURN:
                     current = menu_options[selected_option]
@@ -182,8 +178,10 @@ def show_settings_menu(screen, clock, settings, menu_font, move_sound, select_so
                     if current == "Screen Size":
                         idx = resolutions.index(settings["resolution"])
                         settings["resolution"] = resolutions[(idx + 1) % len(resolutions)]
+                        settings_manager.save_settings(settings)
                         screen = pygame.display.set_mode(settings["resolution"])
                     elif current == "Back":
+                        settings_manager.save_settings(settings)
                         menu_active = False
 
         draw_settings_menu()
