@@ -3,8 +3,7 @@ import sys
 import constants
 import random
 import settings_manager
-
-from audio import apply_volume
+import audio
 
 def show_menu(screen, clock, settings):
     pygame.display.set_caption("Space Goose Menu")
@@ -14,9 +13,10 @@ def show_menu(screen, clock, settings):
     menu_active = True
     move_sound = pygame.mixer.Sound("./sounds/menu_move.wav")
     select_sound = pygame.mixer.Sound("./sounds/menu_select.wav")
-    apply_volume(settings, (move_sound, select_sound))
+    audio.apply_volume(settings, (move_sound, select_sound))
     menu_font = pygame.font.Font("./fonts/Vaseline Extra.ttf", 60)
     title_font = pygame.font.Font("./fonts/Championship.ttf", 100)
+    audio.play_music("./sounds/menu_music.ogg", settings)
 
 
 
@@ -89,6 +89,7 @@ def show_menu(screen, clock, settings):
                     select_sound.play()
                     choice = menu_options[selected_option]
                     if choice == "Start Game":
+                        audio.stop_music()
                         menu_active = False
                     elif choice == "Settings":
                         # Open settings menu and update screen if resolution changes
@@ -163,23 +164,23 @@ def show_settings_menu(screen, clock, settings, menu_font, move_sound, select_so
                 elif event.key in [pygame.K_RIGHT, pygame.K_d]:
                     if menu_options[selected_option] == "Volume":
                         settings["volume"] = min(100, settings["volume"] + 5)
-                        apply_volume(settings, (move_sound, select_sound))
+                        audio.apply_volume(settings, (move_sound, select_sound))
                         settings_manager.save_settings(settings)
                         move_sound.play()
                 elif event.key in [pygame.K_LEFT, pygame.K_a]:
                     if menu_options[selected_option] == "Volume":
                         settings["volume"] = max(0, settings["volume"] - 5)
-                        apply_volume(settings, (move_sound, select_sound))
+                        audio.apply_volume(settings, (move_sound, select_sound))
                         settings_manager.save_settings(settings)
                         move_sound.play()
                 elif event.key == pygame.K_RETURN:
                     current = menu_options[selected_option]
                     select_sound.play()
                     if current == "Screen Size":
-                        idx = resolutions.index(settings["resolution"])
-                        settings["resolution"] = resolutions[(idx + 1) % len(resolutions)]
+                        idx = resolutions.index(tuple(settings["resolution"]))
+                        settings["resolution"] = list(resolutions[(idx + 1) % len(resolutions)])
                         settings_manager.save_settings(settings)
-                        screen = pygame.display.set_mode(settings["resolution"])
+                        screen = pygame.display.set_mode(tuple(settings["resolution"]))
                     elif current == "Back":
                         settings_manager.save_settings(settings)
                         menu_active = False

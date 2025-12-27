@@ -6,7 +6,7 @@ DEFAULT_SETTINGS = {
     "resolution": [1280, 720],
 }
 
-SETTINGS_PATH = "settings.json"
+SETTINGS_PATH = "user_settings.json"
 
 def load_settings(path: str = SETTINGS_PATH) -> dict:
     """Load settings from JSON; fall back to defaults if missing/broken."""

@@ -9,3 +9,16 @@ def apply_volume(settings, sfx_sounds=()):
         pygame.mixer.music.set_volume(vol)
     except pygame.error:
         pass
+
+def play_music(path, settings, loop=True):
+    try:
+        pygame.mixer.music.load(path)
+        apply_volume(settings)
+        pygame.mixer.music.play(-1 if loop else 0)
+    except pygame.error:
+        pass
+def stop_music():
+    try:
+        pygame.mixer.music.stop()
+    except pygame.error:
+        pass

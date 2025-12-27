@@ -17,6 +17,7 @@ def init_audio():
         print("Audio unavailable, continuing without sound")
 def main():
     # initialise game engines
+    pygame.mixer.pre_init(frequency=44100, size=-16, channels=2, buffer=1024)
     pygame.init()
     init_audio()
     settings = settings_manager.load_settings()
