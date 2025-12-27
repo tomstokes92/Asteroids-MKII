@@ -3,6 +3,8 @@ import sys
 import constants
 import random
 
+from audio import apply_volume
+
 def show_menu(screen, clock):
     pygame.display.set_caption("Space Goose Menu")
 
@@ -10,16 +12,19 @@ def show_menu(screen, clock):
     selected_option = 0
     menu_active = True
 
-    move_sound = pygame.mixer.Sound("./sounds/menu_move.wav")
-    select_sound = pygame.mixer.Sound("./sounds/menu_select.wav")
-    menu_font = pygame.font.Font("./fonts/Vaseline Extra.ttf", 60)
-    title_font = pygame.font.Font("./fonts/Championship.ttf", 100)
-
     # Settings dict
     settings = {
         "volume": 50,
         "resolution": (constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT)
     }
+
+    move_sound = pygame.mixer.Sound("./sounds/menu_move.wav")
+    select_sound = pygame.mixer.Sound("./sounds/menu_select.wav")
+    apply_volume(settings, (move_sound, select_sound))
+    menu_font = pygame.font.Font("./fonts/Vaseline Extra.ttf", 60)
+    title_font = pygame.font.Font("./fonts/Championship.ttf", 100)
+
+
 
     # Snowflake initialization
     screen_width, screen_height = screen.get_size()
@@ -164,10 +169,12 @@ def show_settings_menu(screen, clock, settings, menu_font, move_sound, select_so
                 elif event.key in [pygame.K_RIGHT, pygame.K_d]:
                     if menu_options[selected_option] == "Volume":
                         settings["volume"] = min(100, settings["volume"] + 5)
+                        apply_volume(settings, (move_sound, select_sound))
                         move_sound.play()
                 elif event.key in [pygame.K_LEFT, pygame.K_a]:
                     if menu_options[selected_option] == "Volume":
                         settings["volume"] = max(0, settings["volume"] - 5)
+                        apply_volume(settings, (move_sound, select_sound))
                         move_sound.play()
                 elif event.key == pygame.K_RETURN:
                     current = menu_options[selected_option]
