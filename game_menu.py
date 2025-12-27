@@ -5,20 +5,19 @@ import os
 
 def show_menu(screen, font, clock):
     pygame.display.set_caption("Space Goose Menu")
+    menu_font = pygame.font.Font("./fonts/Vaseline Extra.ttf", 60)
+    title_font = pygame.font.Font("./fonts/Championship.ttf", 100)
     menu_options = ["Start Game", "Settings", "Quit"]
     selected_option = 0
     menu_active = True
+    
 
     def draw_menu():
         screen.fill(constants.BLACK)
-
-        # Title
-        title_font = pygame.font.Font("./fonts/Championship.ttf", 100)
-        menu_font = pygame.font.Font("./fonts/Vaseline Extra.ttf", 60)
-        title_text = title_font.render("SPACE GOOSE", True, constants.WHITE)
+        # Title        
+        title_text = title_font.render("SPACE GOOSE", True, "gold")
         title_rect = title_text.get_rect(center=(constants.SCREEN_WIDTH // 2, 150))
         screen.blit(title_text, title_rect)
-
         for i, option in enumerate(menu_options):
             if i == selected_option:
                 display_text = f"> {option} <"
@@ -29,7 +28,30 @@ def show_menu(screen, font, clock):
             text = menu_font.render(display_text, True, colour)
             text_rect = text.get_rect(center=(constants.SCREEN_WIDTH // 2,
                                               constants.SCREEN_HEIGHT // 2 + i * 100))
-            screen.blit(text, text_rect)           
+            screen.blit(text, text_rect)
+
+    def mouse_position():
+        nonlocal selected_option
+        mouse_pos = pygame.mouse.get_pos()
+        for i, option, in enumerate(menu_options):
+            text = menu_font.render(option, True, constants.WHITE)
+            text_rect = text.get_rect(center=(constants.SCREEN_WIDTH // 2, 
+                                              constants.SCREEN_HEIGHT // 2 + i * 100))
+            if text_rect.collidepoint(mouse_pos):
+                selected_option = i
+                if pygame.mouse.get_pressed()[0]:
+                    activate_option(option)
+
+    def activate_option(option):
+        nonlocal menu_active
+        if option == "Start Game":
+            menu_active = False
+        elif option == "Quit":
+            pygame.quit()
+            sys.exit()
+        elif option == "Settings":
+            print("Page not available yet!!")
+
 
     while menu_active:
         for event in pygame.event.get():
@@ -49,7 +71,7 @@ def show_menu(screen, font, clock):
                     elif menu_options[selected_option] == "Quit":
                         pygame.quit()
                         sys.exit()
-                    
+        mouse_position()            
         draw_menu()
         pygame.display.flip()
         clock.tick(constants.FPS)
