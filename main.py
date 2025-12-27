@@ -6,6 +6,7 @@ import sys
 import constants
 import game_menu
 import settings_manager
+import game
 
 
 # audio crash protection
@@ -25,17 +26,14 @@ def main():
     screen = pygame.display.set_mode(tuple(settings["resolution"]))
     pygame.display.set_caption("Space Goose")
     clock = pygame.time.Clock()
-    # Pass screen to menu
-    game_menu.show_menu(screen, clock, settings)
-    # Start game loop
+
     running = True
     while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-        screen.fill(constants.BLACK)
-        pygame.display.flip()
-        clock.tick(constants.FPS)
+        menu_result = game_menu.show_menu(screen, clock, settings)
+        if menu_result == "start":
+            game.run_game(screen, clock)
+        else:
+            running = False
     pygame.quit()
 
 if __name__ == "__main__":

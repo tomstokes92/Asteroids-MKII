@@ -91,6 +91,7 @@ def show_menu(screen, clock, settings):
                     if choice == "Start Game":
                         audio.stop_music()
                         menu_active = False
+                        return "start"
                     elif choice == "Settings":
                         # Open settings menu and update screen if resolution changes
                         screen = show_settings_menu(screen, clock, settings, menu_font, move_sound, select_sound)
@@ -102,7 +103,7 @@ def show_menu(screen, clock, settings):
         pygame.display.flip()
         clock.tick(constants.FPS)
 
-    return
+    return None
 
 def show_settings_menu(screen, clock, settings, menu_font, move_sound, select_sound):
     title_font = pygame.font.Font("./fonts/Vaseline Extra.ttf", 100)
