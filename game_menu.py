@@ -29,30 +29,6 @@ def show_menu(screen, font, clock):
             text_rect = text.get_rect(center=(constants.SCREEN_WIDTH // 2,
                                               constants.SCREEN_HEIGHT // 2 + i * 100))
             screen.blit(text, text_rect)
-
-    def mouse_position():
-        nonlocal selected_option
-        mouse_pos = pygame.mouse.get_pos()
-        for i, option, in enumerate(menu_options):
-            text = menu_font.render(option, True, constants.WHITE)
-            text_rect = text.get_rect(center=(constants.SCREEN_WIDTH // 2, 
-                                              constants.SCREEN_HEIGHT // 2 + i * 100))
-            if text_rect.collidepoint(mouse_pos):
-                selected_option = i
-                if pygame.mouse.get_pressed()[0]:
-                    activate_option(option)
-
-    def activate_option(option):
-        nonlocal menu_active
-        if option == "Start Game":
-            menu_active = False
-        elif option == "Quit":
-            pygame.quit()
-            sys.exit()
-        elif option == "Settings":
-            print("Page not available yet!!")
-
-
     while menu_active:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -70,8 +46,7 @@ def show_menu(screen, font, clock):
                         pass
                     elif menu_options[selected_option] == "Quit":
                         pygame.quit()
-                        sys.exit()
-        mouse_position()            
+                        sys.exit()           
         draw_menu()
         pygame.display.flip()
         clock.tick(constants.FPS)
